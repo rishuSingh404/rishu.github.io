@@ -44,7 +44,7 @@ export type ProfileLink = {
 }
 
 export const profile = {
-  photo: '/rishu.jpeg',
+  photo: 'rishu.jpeg',
   photoAlt: 'Rishu Kumar Singh',
   name: 'Rishu Kumar Singh',
   role: 'Undergraduate Researcher · IIT Patna',
@@ -122,7 +122,7 @@ const publicationSourceRaw: Omit<Publication, 'subtopics'>[] = [
       { label: 'Paper', href: 'http://arxiv.org/abs/2511.14693' },
       { label: 'Code', href: 'https://github.com/sarmistha-D/VALOR' },
     ],
-    image: '/projects/valor.png',
+    image: 'projects/valor.png',
     imageAlt: 'VALOR framework — multimodal MoE for complaint understanding',
     award: 'AAAI 2026',
   },
@@ -136,7 +136,7 @@ const publicationSourceRaw: Omit<Publication, 'subtopics'>[] = [
       'Introduces CompSense, a multi-task Mixture-of-Experts framework with commonsense-aware contextualization, severity-aware expert gating, hierarchical aspect-to-severity classification, and supervised contrastive learning. Targets joint detection of complaint aspects and severity levels in multi-turn customer-support dialogues. Achieves state-of-the-art results on conversational complaint benchmarks.',
     tags: ['NLP', 'Conversational AI', 'MoE', 'Aspect Detection'],
     links: [{ label: 'Code', href: 'https://github.com/sarmistha-D/CompSense' }],
-    image: '/projects/compsense.png',
+    image: 'projects/compsense.png',
     imageAlt: 'CompSense framework — MoE for aspect and severity detection',
     award: 'ECIR 2026',
   },
@@ -151,7 +151,7 @@ const publicationSourceRaw: Omit<Publication, 'subtopics'>[] = [
       'Proposes CarePilot, an actor-critic multiagent framework with dual memory (long-term and short-term) for complex, long-horizon GUI automation across healthcare software — DICOM viewers, EHR systems, and lab information platforms. Also introduces CareFlow, an expert-annotated benchmark of real clinical workflows. Achieves state-of-the-art performance across all domains.',
     tags: ['Computer Vision', 'Multimodal', 'Agentic AI', 'Healthcare'],
     links: [{ label: 'Paper', href: 'https://arxiv.org/abs/2603.24157' }],
-    image: '/projects/carepilot.png',
+    image: 'projects/carepilot.png',
     imageAlt: 'CarePilot — actor-critic agent for healthcare GUI automation',
     award: 'CVPR 2026 Findings',
   },

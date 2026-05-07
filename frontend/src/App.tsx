@@ -279,7 +279,7 @@ export default function App() {
               <div className="hero-photo-frame float-slow">
                 <div className="hero-photo-glow" />
                 {profile.photo ? (
-                  <HeroPhoto src={profile.photo} alt={profile.photoAlt ?? `${profile.name} headshot`} />
+                  <HeroPhoto src={BASE_URL + profile.photo} alt={profile.photoAlt ?? `${profile.name} headshot`} />
                 ) : (
                   <div className="hero-photo placeholder-photo">
                     <span>{profile.name.slice(0, 1)}</span>
@@ -460,7 +460,8 @@ export default function App() {
   )
 }
 
-const HEADSHOT_FALLBACK = '/headshot-placeholder.svg'
+const BASE_URL = import.meta.env.BASE_URL
+const HEADSHOT_FALLBACK = BASE_URL + 'headshot-placeholder.svg'
 
 function ProjectCover({
   title,
@@ -479,7 +480,7 @@ function ProjectCover({
   if (image) {
     return (
       <div className={base}>
-        <img src={image} alt={alt} loading="lazy" />
+        <img src={BASE_URL + image} alt={alt} loading="lazy" />
       </div>
     )
   }
