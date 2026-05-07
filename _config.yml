@@ -6,9 +6,9 @@
 # `jekyll serve`. If you change this file, please restart the server process.
 
 # Site Settings
-title                    : "Shoubin Yu"
-description              : "Ph.D. Student in Computer Science"
-repository               : "Yui010206/Yui010206.github.io"
+title                    : "Rishu Kumar Singh"
+description              : "Undergraduate Researcher, IIT Patna — Multimodal AI & Mechanistic Interpretability"
+repository               : "rishuSingh404/rishuSingh404.github.io"
 google_scholar_stats_use_cdn : false
 
 # google analytics
@@ -21,15 +21,15 @@ baidu_site_verification  :  # get baidu_site_verification from https://ziyuan.ba
 
 # Site Author
 author:
-  name             : "Shoubin Yu"
-  avatar           : "images/shoubin.jpg"
-  bio              : "UNC, Chapel Hill"
-  location         : "North Carolina, US"
+  name             : "Rishu Kumar Singh"
+  avatar           : "images/rishu.jpeg"
+  bio              : "IIT Patna · AI-NLP-ML Lab"
+  location         : "Patna, India"
   employer         :
-  pubmed           : 
-  googlescholar    : "https://scholar.google.com/citations?user=UqC5AoMAAAAJ&hl=en&oi=ao"
-  email            : 
-  researchgate     :  # e.g., "https://www.researchgate.net/profile/yourprofile"
+  pubmed           :
+  googlescholar    : "https://scholar.google.com/citations?user=sIy2A7oAAAAJ&hl=en"
+  email            : "rishu_2301ee36@iitp.ac.in"
+  researchgate     :
   uri              :
   bitbucket        :
   codepen          :
@@ -37,21 +37,21 @@ author:
   flickr           :
   facebook         :
   foursquare       :
-  github           : "Yui010206"
+  github           : "rishuSingh404"
   google_plus      :
   keybase          :
   instagram        :
-  impactstory      : # e.g., "https://profiles.impactstory.org/u/xxxx-xxxx-xxxx-xxxx"
+  impactstory      :
   lastfm           :
-  linkedin         : # e.g., "linkedin username"
-  dblp             : # e.g., "https://dblp.org/pid/xx/xxxx.html"
-  orcid            : # e.g., "https://orcid.org/xxxx"
+  linkedin         : "rishu-krsingh"
+  dblp             :
+  orcid            :
   pinterest        :
   soundcloud       :
-  stackoverflow    : # http://stackoverflow.com/users/123456/username
+  stackoverflow    :
   steam            :
   tumblr           :
-  twitter          : "shoubin621"
+  twitter          :
   vine             :
   weibo            :
   xing             :
@@ -136,7 +136,7 @@ sass:
 
 # Outputting
 permalink: /:categories/:title/
-timezone: Asia/Shanghai # http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+timezone: Asia/Kolkata # http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 
 
 # Plugins

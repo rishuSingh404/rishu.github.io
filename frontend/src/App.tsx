@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
-import type { ProfileLink, ProfileLinkVariant, Publication, PublicationSubtopicId } from './data'
+import type { ProfileLink, ProfileLinkVariant, Publication } from './data'
 import {
   aboutParagraphs,
   allPublications,
@@ -7,13 +7,8 @@ import {
   heroFocus,
   internships,
   news,
-  PUBLICATION_SUBTOPICS,
   profile,
-  selectedPublications,
-  serviceAndTalk,
 } from './data'
-
-const years = ['All', ...Array.from(new Set(allPublications.map((p) => String(p.year)))).sort((a, b) => Number(b) - Number(a))]
 
 type ArchivePublicationGroup = {
   key: string
@@ -79,7 +74,6 @@ function PublicationTitle({ title, links }: { title: string; links: Publication[
   )
 }
 
-/** Highlights "Shoubin Yu" / "Shoubin Yu*" in author strings (case-insensitive). */
 function LinkIcon({ variant }: { variant: ProfileLinkVariant }) {
   const common = { width: 18, height: 18, viewBox: '0 0 24 24', fill: 'none', 'aria-hidden': true as const }
   switch (variant) {
@@ -187,11 +181,11 @@ function MarkedText({ text, papersSyntax = false }: { text: string; papersSyntax
 }
 
 function AuthorsLine({ text }: { text: string }) {
-  const parts = text.split(/(Shoubin Yu\*?)/gi)
+  const parts = text.split(/(Rishu Kumar Singh\*?)/gi)
   return (
     <p className="authors">
       {parts.map((part, i) =>
-        /^Shoubin Yu\*?$/i.test(part) ? (
+        /^Rishu Kumar Singh\*?$/i.test(part) ? (
           <span key={i} className="author-self">
             {part}
           </span>
@@ -203,14 +197,15 @@ function AuthorsLine({ text }: { text: string }) {
   )
 }
 
-type ArchiveView = 'year' | 'topic'
-
 export default function App() {
-  const [archiveView, setArchiveView] = useState<ArchiveView>('year')
-  const [activeYear, setActiveYear] = useState('All')
-  const [activeSubtopic, setActiveSubtopic] = useState<PublicationSubtopicId | 'All'>('All')
+  const [dark, setDark] = useState(() => localStorage.getItem('theme') === 'dark')
   const [photoEasterEgg, setPhotoEasterEgg] = useState<{ x: number; y: number } | null>(null)
   const [researchIndex, setResearchIndex] = useState(0)
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light')
+    localStorage.setItem('theme', dark ? 'dark' : 'light')
+  }, [dark])
 
   const researchStatements = useMemo(() => [heroFocus], [])
 
@@ -220,19 +215,6 @@ export default function App() {
     setResearchIndex((current) => (current + delta + researchStatements.length) % researchStatements.length)
   }
 
-  const filteredPublications = useMemo(() => {
-    if (archiveView === 'year') {
-      if (activeYear === 'All') return allPublications
-      return allPublications.filter((p) => String(p.year) === activeYear)
-    }
-    if (activeSubtopic === 'All') return allPublications
-    return allPublications.filter((p) => p.subtopics.includes(activeSubtopic))
-  }, [archiveView, activeYear, activeSubtopic])
-
-  const archiveGroups = useMemo(
-    () => groupPublicationsByYearAndVenue(filteredPublications),
-    [filteredPublications],
-  )
 
   return (
     <div className="app-shell" id="top">
@@ -245,23 +227,38 @@ export default function App() {
           style={{ left: photoEasterEgg.x, top: photoEasterEgg.y }}
           aria-hidden
         >
-          {'Yui & Piepie'}
+          {'👋'}
         </div>
       ) : null}
 
       <header className="site-header">
         <a className="brand" href="#top">
-          Shoubin Yu
+          Rishu Kumar Singh
         </a>
         <nav>
-          <a href="#research">Current Research statement</a>
+          <a href="#research">Research</a>
           <a href="#about">About</a>
-          <a href="#selected">Selected work</a>
           <a href="#all">Publications</a>
           <a href="#news">News</a>
           <a href="#education">Education</a>
-          <a href="#blog">Blog</a>
         </nav>
+        <button
+          type="button"
+          className="theme-toggle"
+          onClick={() => setDark((d) => !d)}
+          aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
+        >
+          {dark ? (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+              <circle cx="12" cy="12" r="4" fill="currentColor" />
+              <path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+            </svg>
+          ) : (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor" />
+            </svg>
+          )}
+        </button>
       </header>
 
       <main>
@@ -369,14 +366,14 @@ export default function App() {
           </div>
         </section>
 
-        <section id="selected" className="section">
+        <section id="all" className="section">
           <div className="section-heading section-heading--row">
-            <p className="section-kicker">Portfolio</p>
-            <h2 className="section-title">Selected work</h2>
+            <p className="section-kicker">Research</p>
+            <h2 className="section-title">Publications</h2>
           </div>
 
           <div className="publication-grid">
-            {selectedPublications.map((publication) => (
+            {allPublications.map((publication) => (
               <article key={publication.title} className="glass-card publication-card">
                 <ProjectCover
                   title={publication.title}
@@ -395,16 +392,12 @@ export default function App() {
                   <p>{publication.summary}</p>
                   <div className="tag-row">
                     {publication.tags.map((tag) => (
-                      <span key={tag} className="tag">
-                        {tag}
-                      </span>
+                      <span key={tag} className="tag">{tag}</span>
                     ))}
                   </div>
                   <div className="link-row">
                     {publication.links.map((link) => (
-                      <a key={link.label} href={link.href}>
-                        {link.label}
-                      </a>
+                      <a key={link.label} href={link.href}>{link.label}</a>
                     ))}
                   </div>
                 </div>
@@ -413,114 +406,11 @@ export default function App() {
           </div>
         </section>
 
-        <section id="all" className="section">
-          <div className="section-header archive-header">
-            <div className="section-heading">
-              <p className="section-kicker">Archive</p>
-              <h2 className="section-title">All publications</h2>
-            </div>
-            <div className="archive-view-switch" role="tablist" aria-label="Browse publications">
-              <button
-                type="button"
-                role="tab"
-                aria-selected={archiveView === 'year'}
-                className={archiveView === 'year' ? 'archive-tab active' : 'archive-tab'}
-                onClick={() => setArchiveView('year')}
-              >
-                By year
-              </button>
-              <button
-                type="button"
-                role="tab"
-                aria-selected={archiveView === 'topic'}
-                className={archiveView === 'topic' ? 'archive-tab active' : 'archive-tab'}
-                onClick={() => setArchiveView('topic')}
-              >
-                By topic
-              </button>
-            </div>
-          </div>
-
-          <div className="archive-filters">
-            {archiveView === 'year' ? (
-              <div className="filter-row" role="group" aria-label="Filter by year">
-                {years.map((year) => (
-                  <button
-                    key={year}
-                    type="button"
-                    className={year === activeYear ? 'filter active' : 'filter'}
-                    onClick={() => setActiveYear(year)}
-                  >
-                    {year}
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <div className="filter-row" role="group" aria-label="Filter by sub-topic">
-                <button
-                  type="button"
-                  className={activeSubtopic === 'All' ? 'filter active' : 'filter'}
-                  onClick={() => setActiveSubtopic('All')}
-                >
-                  All topics
-                </button>
-                {PUBLICATION_SUBTOPICS.map((st) => (
-                  <button
-                    key={st.id}
-                    type="button"
-                    className={activeSubtopic === st.id ? 'filter active' : 'filter'}
-                    onClick={() => setActiveSubtopic(st.id)}
-                  >
-                    {st.label}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div className="glass-card archive-card">
-            {filteredPublications.length === 0 ? (
-              <p className="archive-empty">No publications match this filter.</p>
-            ) : null}
-            {archiveGroups.flatMap((group) =>
-              group.publications.map((publication) => (
-                <article key={`${publication.title}-${publication.year}`} className="archive-item">
-                  <ProjectCover
-                    title={publication.title}
-                    image={publication.image}
-                    imageAlt={publication.imageAlt}
-                    variant="archive"
-                  />
-                  <div className="archive-main">
-                    <div className="archive-meta">
-                      <span className="venue-name">{publication.venue}</span>
-                      <span className="venue-year">{publication.year}</span>
-                    </div>
-                    {publication.award ? <p className="paper-award paper-award--compact">{publication.award}</p> : null}
-                    <div className="archive-body">
-                      <PublicationTitle title={publication.title} links={publication.links} />
-                      <AuthorsLine text={publication.authors} />
-                      <p>{publication.summary}</p>
-                    </div>
-                  </div>
-                  <div className="archive-links">
-                    {publication.links.map((link) => (
-                      <a key={link.label} href={link.href}>
-                        {link.label}
-                      </a>
-                    ))}
-                  </div>
-                </article>
-              )),
-            )}
-          </div>
-        </section>
-
         <section id="education" className="section edu-exp-section">
           <div className="glass-card news-card edu-exp-card">
             <div className="section-heading section-heading--inline">
               <p className="section-kicker">Background</p>
-              <h2 className="section-title">Education &amp; internships</h2>
+              <h2 className="section-title">Education &amp; Honors</h2>
             </div>
             <div className="edu-exp-grid">
               <div className="edu-exp-col">
@@ -543,7 +433,7 @@ export default function App() {
                 </ul>
               </div>
               <div className="edu-exp-col">
-                <h3 className="edu-exp-subtitle">Internships</h3>
+                <h3 className="edu-exp-subtitle">Honors &amp; Achievements</h3>
                 <ul className="org-list">
                   {internships.map((row) => (
                     <li key={`${row.org}-${row.period}`} className="org-row">
@@ -565,32 +455,6 @@ export default function App() {
           </div>
         </section>
 
-        <section id="blog" className="section">
-          <div className="glass-card prose-card">
-            <div className="section-heading section-heading--inline">
-              <p className="section-kicker">Blog</p>
-              <h2 className="section-title">Blog</h2>
-            </div>
-            <p className="section-note blog-coming-soon-lede">TBD</p>
-          </div>
-        </section>
-
-        <section className="section">
-          <div className="glass-card prose-card service-card">
-            <div className="section-heading section-heading--inline">
-              <p className="section-kicker">Community</p>
-              <h2 className="section-title">Service &amp; talks</h2>
-            </div>
-            <ul>
-              {serviceAndTalk.talks.map((t) => (
-                <li key={t}>{t}</li>
-              ))}
-            </ul>
-            {serviceAndTalk.reviewing.map((line) => (
-              <p key={line}>{line}</p>
-            ))}
-          </div>
-        </section>
       </main>
     </div>
   )
